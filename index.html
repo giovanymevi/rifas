@@ -571,6 +571,19 @@
             value="Mistery box"
           />
         </div>
+        <div class="input-premio">
+          <label>🎰 LOTERÍA</label>
+          <input
+            type="text"
+            id="nombreLoteria"
+            placeholder="ej: Rifa Futurista"
+            value="Rifa Futurista"
+          />
+        </div>
+        <div class="input-premio">
+          <label>📅 FECHA RIFA</label>
+          <input type="date" id="fechaRifa" value="2026-02-24" />
+        </div>
         <button class="btn-neon" id="actualizarPremiosBtn">ACTUALIZAR</button>
         <button class="btn-neon" id="verClientesBtn">VER CLIENTES</button>
       </div>
@@ -683,15 +696,16 @@
               creado_en TIMESTAMPTZ DEFAULT now()
             );
 
-            -- tabla para almacenar los premios y el costo del boleto
-            -- usaremos siempre la fila con id = 1 como configuración única
+            -- tabla para almacenar los premios, costo, nombre de lotería y fecha
             CREATE TABLE premios (
               id SERIAL PRIMARY KEY,
               premio1 TEXT NOT NULL,
               premio2 TEXT NOT NULL,
               premio3 TEXT NOT NULL,
               especial TEXT NOT NULL,
-              costo_boleto NUMERIC NOT NULL
+              costo_boleto NUMERIC NOT NULL,
+              nombre_loteria TEXT NOT NULL,
+              fecha_rifa DATE NOT NULL
             );
 
             -- ⚠️ IMPORTANTE: Ejecuta esto para permitir guardar datos (desactiva seguridad RLS):
@@ -712,6 +726,8 @@
           especial: "Mistery box",
         };
         let costoBoleto = 10; // Valor por defecto
+        let nombreLoteria = "Rifa Futurista"; // Nombre de la lotería
+        let fechaRifa = "2026-02-24"; // Fecha de la rifa
         const premiosRowId = 1; // siempre usamos esta fila en la tabla `premios`
 
         // UI: número seleccionado actualmente (0-99) o null si ninguno
@@ -725,6 +741,8 @@
         const inputPremio3 = document.getElementById("premio3");
         const inputPremioEspecial = document.getElementById("premioEspecial");
         const inputCostoBoleto = document.getElementById("costoBoleto");
+        const inputNombreLoteria = document.getElementById("nombreLoteria");
+        const inputFechaRifa = document.getElementById("fechaRifa");
         const actualizarBtn = document.getElementById("actualizarPremiosBtn");
         const registroContainer = document.getElementById("registroContainer");
         const numeroSeleccionadoDisplay = document.getElementById(
@@ -912,17 +930,18 @@
           premios.premio3 = inputPremio3.value.trim() || "TV 8K";
           premios.especial = inputPremioEspecial.value.trim() || "Mistery box";
           costoBoleto = Number(inputCostoBoleto.value) || 0;
+          nombreLoteria = inputNombreLoteria.value.trim() || "Rifa Futurista";
+          fechaRifa = inputFechaRifa.value || "2026-02-24";
           renderizarPremios();
-          // guardar también en la nube para que otros clientes vean el cambio
-          actualizarPremiosEnSupabase();
+          actualizarDatosEnSupabase();
           mostrarMensajeTemporal(
-            "✨ Premios y costo actualizados ✨",
+            "✨ Premios, datos y fecha actualizados ✨",
             "#f000f0",
           );
         }
 
-        // guarda la configuración de premios en la tabla `premios`
-        async function actualizarPremiosEnSupabase() {
+        // guarda la configuración de premios, datos y fecha en la tabla `premios`
+        async function actualizarDatosEnSupabase() {
           const { error } = await _supabase
             .from("premios")
             .update({
@@ -931,12 +950,14 @@
               premio3: premios.premio3,
               especial: premios.especial,
               costo_boleto: costoBoleto,
+              nombre_loteria: nombreLoteria,
+              fecha_rifa: fechaRifa,
             })
             .eq("id", premiosRowId);
           if (error) {
-            console.error("Error actualizando premios en Supabase:", error);
+            console.error("Error actualizando datos en Supabase:", error);
             mostrarMensajeTemporal(
-              "🔴 Error al actualizar premios en la nube.",
+              "🔴 Error al actualizar datos en la nube.",
               "red",
             );
           }
@@ -961,6 +982,8 @@
             premios.premio3 = data.premio3 || premios.premio3;
             premios.especial = data.especial || premios.especial;
             costoBoleto = Number(data.costo_boleto) || costoBoleto;
+            nombreLoteria = data.nombre_loteria || nombreLoteria;
+            fechaRifa = data.fecha_rifa || fechaRifa;
           } else {
             // no existe, creamos la fila con valores por defecto
             const { error: insertErr } = await _supabase
@@ -973,6 +996,8 @@
                   premio3: premios.premio3,
                   especial: premios.especial,
                   costo_boleto: costoBoleto,
+                  nombre_loteria: nombreLoteria,
+                  fecha_rifa: fechaRifa,
                 },
               ]);
             if (insertErr) {
@@ -1078,14 +1103,18 @@
                   premios.premio3 = nuevo.premio3;
                   premios.especial = nuevo.especial;
                   costoBoleto = Number(nuevo.costo_boleto) || costoBoleto;
+                  nombreLoteria = nuevo.nombre_loteria || nombreLoteria;
+                  fechaRifa = nuevo.fecha_rifa || fechaRifa;
                   inputPremio1.value = premios.premio1;
                   inputPremio2.value = premios.premio2;
                   inputPremio3.value = premios.premio3;
                   inputPremioEspecial.value = premios.especial;
                   inputCostoBoleto.value = costoBoleto;
+                  inputNombreLoteria.value = nombreLoteria;
+                  inputFechaRifa.value = fechaRifa;
                   renderizarPremios();
                   mostrarMensajeTemporal(
-                    "🎯 Premios sincronizados desde la nube.",
+                    "🎯 Datos y premios sincronizados desde la nube.",
                     "#00ffaa",
                   );
                 }
@@ -1104,6 +1133,8 @@
           inputPremio3.value = premios.premio3;
           inputPremioEspecial.value = premios.especial;
           inputCostoBoleto.value = costoBoleto;
+          inputNombreLoteria.value = nombreLoteria;
+          inputFechaRifa.value = fechaRifa;
           renderizarPremios();
           renderizarGrid();
           actualizarContadores();
