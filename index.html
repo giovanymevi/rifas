@@ -26,8 +26,8 @@
         background: radial-gradient(circle at 30% 10%, #0b0d1e, #010101 90%);
         display: flex;
         justify-content: center;
-        align-items: center;
-        padding: 20px;
+        align-items: flex-start;
+        padding: 10px;
       }
 
       /* contenedor principal futurista */
@@ -51,11 +51,11 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        gap: 20px;
-        margin-bottom: 40px;
+        gap: 15px;
+        margin-bottom: 30px;
         background: #0d122bb3;
-        padding: 20px 30px;
-        border-radius: 80px;
+        padding: 15px 20px;
+        border-radius: 40px;
         border: 1px solid #ff44cc;
         box-shadow:
           0 0 20px #ff44cc,
@@ -77,65 +77,70 @@
 
       .premios-especiales {
         display: flex;
-        gap: 25px;
+        gap: 12px;
         flex-wrap: wrap;
+        flex: 1;
+        min-width: 0;
       }
 
       .premio-item {
         background: rgba(0, 255, 255, 0.1);
         border: 1px solid #ff44cc;
         border-radius: 50px;
-        padding: 12px 28px;
+        padding: 8px 16px;
         font-weight: 600;
-        font-size: 1.2rem;
+        font-size: 0.95rem;
         color: white;
         text-shadow: 0 0 10px magenta;
         box-shadow: 0 0 20px #00ffff7f;
         backdrop-filter: blur(4px);
+        flex: 0 1 auto;
+        white-space: nowrap;
       }
 
       .premio-item span {
         color: #f0f05a;
-        margin-right: 10px;
-        font-size: 1.5rem;
+        margin-right: 6px;
+        font-size: 1rel;
       }
 
       /* formulario de premios */
       .form-premios {
         background: #0b142bb0;
-        border-radius: 60px;
-        padding: 25px 30px;
-        margin-bottom: 40px;
+        border-radius: 40px;
+        padding: 20px;
+        margin-bottom: 30px;
         border: 2px solid #ff44cc80;
         box-shadow:
           0 0 40px #ff44cc,
           0 0 10px #00ffff inset;
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
-        gap: 20px 40px;
+        align-items: flex-end;
+        gap: 15px;
       }
 
       .input-premio {
-        flex: 1 1 180px;
+        flex: 1 1 140px;
         display: flex;
         flex-direction: column;
+        min-width: 140px;
       }
 
       .input-premio label {
         color: #9bd0ff;
-        font-size: 1rem;
-        letter-spacing: 2px;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
         text-transform: uppercase;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
       }
 
       .input-premio input {
         background: #0f1a2f;
         border: 2px solid cyan;
-        border-radius: 50px;
-        padding: 12px 20px;
-        font-size: 1.1rem;
+        border-radius: 30px;
+        padding: 10px 15px;
+        font-size: 1rem;
         color: #fff;
         outline: none;
         box-shadow: 0 0 15px cyan;
@@ -150,9 +155,9 @@
       .btn-neon {
         background: transparent;
         border: 2px solid #00f7ff;
-        border-radius: 60px;
-        padding: 14px 36px;
-        font-size: 1.3rem;
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-size: 1rem;
         font-weight: bold;
         color: #00f7ff;
         text-transform: uppercase;
@@ -160,6 +165,7 @@
         box-shadow: 0 0 20px cyan;
         transition: 0.25s;
         backdrop-filter: blur(5px);
+        flex: 0 1 auto;
       }
 
       .btn-neon:hover {
@@ -173,73 +179,134 @@
       }
 
       /* reglas responsivas */
-      @media (max-width: 768px) {
-        .app-wrapper {
-          padding: 20px 15px 25px;
-        }
+      @media (max-width: 920px) {
         .header-neon h1 {
           font-size: 2rem;
+          flex: 0 1 auto;
         }
-        .form-premios,
-        .registro-panel {
+      }
+
+      @media (max-width: 768px) {
+        .app-wrapper {
+          border-radius: 30px 30px 20px 20px;
+          padding: 15px 12px 20px;
+        }
+        .header-neon {
+          border-radius: 30px;
+          padding: 12px 15px;
+          margin-bottom: 20px;
+          gap: 10px;
+        }
+        .header-neon h1 {
+          font-size: 1.6rem;
+          order: -1;
+          flex: 0 1 100%;
+          margin-bottom: 10px;
+        }
+        .premios-especiales {
+          gap: 8px;
+          font-size: 0.9rem;
+        }
+        .form-premios {
           flex-direction: column;
-          gap: 15px 20px;
+          gap: 12px;
+          border-radius: 30px;
+          padding: 15px;
         }
         .input-premio,
         .grupo-input {
           flex: 1 1 100%;
+          width: 100%;
         }
         .btn-neon,
         .btn-registro {
           width: 100%;
-          text-align: center;
         }
         .numeros-grid {
+          grid-template-columns: repeat(5, 1fr);
           gap: 8px;
+          padding: 12px;
+          margin: 20px 0;
         }
         .numero-boton {
-          font-size: 1.4rem;
+          font-size: 1.2rem;
+          border-radius: 12px;
+          border-width: 1.5px;
         }
       }
 
       @media (max-width: 480px) {
+        .app-wrapper {
+          padding: 10px 10px 15px;
+        }
+        .header-neon {
+          padding: 10px 12px;
+          gap: 8px;
+        }
         .header-neon h1 {
-          font-size: 1.6rem;
+          font-size: 1.3rem;
         }
         .premio-item {
-          font-size: 1rem;
-          padding: 8px 20px;
+          font-size: 0.85rem;
+          padding: 6px 12px;
+        }
+        .form-premios {
+          padding: 12px;
+          gap: 10px;
+        }
+        .input-premio label,
+        .grupo-input label {
+          font-size: 0.75rem;
+        }
+        .input-premio input,
+        .grupo-input input {
+          font-size: 0.95rem;
+          padding: 8px 12px;
+        }
+        .btn-neon,
+        .btn-registro {
+          font-size: 0.9rem;
+          padding: 8px 16px;
+        }
+        .numeros-grid {
+          grid-template-columns: repeat(5, 1fr);
+          gap: 6px;
+          padding: 10px;
         }
         .numero-boton {
-          font-size: 1.2rem;
-          padding: 0;
+          font-size: 1rem;
+          border-radius: 8px;
+        }
+        .registro-panel {
+          border-radius: 25px;
+          padding: 15px;
+        }
+        .registro-titulo {
+          font-size: 1.4rem;
         }
       }
 
       /* teclado/grilla de números 10x10 */
       .numeros-grid {
         display: grid;
-        /* se adapta automáticamente al ancho disponible */
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-        gap: 12px;
-        margin: 30px 0 30px;
-        padding: 20px;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 10px;
+        margin: 25px 0;
+        padding: 15px;
         background: rgba(2, 15, 30, 0.7);
-        border-radius: 50px;
+        border-radius: 30px;
         border: 1px solid cyan;
         box-shadow:
           inset 0 0 60px #00ffff0d,
           0 0 40px #ff44cc;
-        /* permite scroll horizontal si muchas columnas en pantallas pequeñas */
-        overflow-x: auto;
       }
 
       .numero-boton {
         aspect-ratio: 1/1;
         background: linear-gradient(145deg, #131d33, #091020);
         border: 2px solid #0cf7ff;
-        border-radius: 25px;
-        font-size: 1.8rem;
+        border-radius: 15px;
+        font-size: 1.4rem;
         font-weight: 700;
         color: #b5f0ff;
         text-shadow: 0 0 8px cyan;
@@ -251,6 +318,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        min-width: 0;
       }
 
       .numero-boton:hover:not(.vendido) {
