@@ -83,6 +83,30 @@
         min-width: 0;
       }
 
+      .info-panel {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        background: rgba(0, 255, 200, 0.1);
+        border: 1px solid #00ffcc;
+        border-radius: 30px;
+        padding: 10px 20px;
+        margin-top: 15px;
+        font-size: 0.95rem;
+        color: #a0f0ff;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .info-item span:first-child {
+        font-weight: bold;
+        color: #f0f05a;
+      }
+
       .premio-item {
         background: rgba(0, 255, 255, 0.1);
         border: 1px solid #ff44cc;
@@ -524,6 +548,9 @@
         </div>
       </div>
 
+      <!-- panel con información de lotería y fecha -->
+      <div class="info-panel" id="infoPanelContainer"></div>
+
       <!-- formulario para definir los 3 premios y especiales -->
       <div class="form-premios" id="formPremios">
         <div class="input-premio">
@@ -736,6 +763,8 @@
         // elementos del DOM
         const grid = document.getElementById("numerosGrid");
         const premiosPanel = document.getElementById("premiosEspecialesPanel");
+        const infoPanelContainer =
+          document.getElementById("infoPanelContainer");
         const inputPremio1 = document.getElementById("premio1");
         const inputPremio2 = document.getElementById("premio2");
         const inputPremio3 = document.getElementById("premio3");
@@ -921,6 +950,12 @@
                 <div class="premio-item"><span>🥉3</span> ${premios.premio3}</div>
                 <div class="premio-item"><span>✨E</span> ${premios.especial}</div>
             `;
+          // actualizar panel de información
+          infoPanelContainer.innerHTML = `
+            <div class="info-item"><span>🎰 Lotería:</span> ${nombreLoteria}</div>
+            <div class="info-item"><span>📅 Fecha:</span> ${new Date(fechaRifa).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })}</div>
+            <div class="info-item"><span>💵 Boleto:</span> $${costoBoleto}</div>
+          `;
         }
 
         // --- tomar valores del formulario y actualizar objeto premios ---
