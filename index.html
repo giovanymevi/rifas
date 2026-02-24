@@ -1,0 +1,1039 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RIFA FUTURISTA · 100 números</title>
+    <!-- SUPABASE CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          "Poppins",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: radial-gradient(circle at 30% 10%, #0b0d1e, #010101 90%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      /* contenedor principal futurista */
+      .app-wrapper {
+        max-width: 1300px;
+        width: 100%;
+        background: rgba(10, 20, 40, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 2px solid rgba(0, 255, 255, 0.25);
+        box-shadow:
+          0 25px 50px -8px cyan,
+          inset 0 0 25px #00ffff1a;
+        border-radius: 60px 60px 40px 40px;
+        padding: 30px 30px 40px;
+      }
+
+      /* cabecera neón */
+      .header-neon {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 40px;
+        background: #0d122bb3;
+        padding: 20px 30px;
+        border-radius: 80px;
+        border: 1px solid #ff44cc;
+        box-shadow:
+          0 0 20px #ff44cc,
+          0 0 5px #00f7ff;
+      }
+
+      .header-neon h1 {
+        font-size: 2.6rem;
+        font-weight: 700;
+        background: linear-gradient(145deg, #a0f0ff, #ff80bf, #ffff80);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 0 15px cyan,
+          0 0 40px magenta;
+        letter-spacing: 2px;
+      }
+
+      .premios-especiales {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+
+      .premio-item {
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid #ff44cc;
+        border-radius: 50px;
+        padding: 12px 28px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: white;
+        text-shadow: 0 0 10px magenta;
+        box-shadow: 0 0 20px #00ffff7f;
+        backdrop-filter: blur(4px);
+      }
+
+      .premio-item span {
+        color: #f0f05a;
+        margin-right: 10px;
+        font-size: 1.5rem;
+      }
+
+      /* formulario de premios */
+      .form-premios {
+        background: #0b142bb0;
+        border-radius: 60px;
+        padding: 25px 30px;
+        margin-bottom: 40px;
+        border: 2px solid #ff44cc80;
+        box-shadow:
+          0 0 40px #ff44cc,
+          0 0 10px #00ffff inset;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px 40px;
+      }
+
+      .input-premio {
+        flex: 1 1 180px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .input-premio label {
+        color: #9bd0ff;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .input-premio input {
+        background: #0f1a2f;
+        border: 2px solid cyan;
+        border-radius: 50px;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        color: #fff;
+        outline: none;
+        box-shadow: 0 0 15px cyan;
+        transition: all 0.2s;
+      }
+
+      .input-premio input:focus {
+        border-color: #ff80bf;
+        box-shadow: 0 0 30px magenta;
+      }
+
+      .btn-neon {
+        background: transparent;
+        border: 2px solid #00f7ff;
+        border-radius: 60px;
+        padding: 14px 36px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #00f7ff;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 0 20px cyan;
+        transition: 0.25s;
+        backdrop-filter: blur(5px);
+      }
+
+      .btn-neon:hover {
+        background: #00ffff22;
+        border-color: magenta;
+        color: magenta;
+        box-shadow:
+          0 0 40px magenta,
+          0 0 10px cyan;
+        transform: scale(1.03);
+      }
+
+      /* teclado/grilla de números 10x10 */
+      .numeros-grid {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 12px;
+        margin: 30px 0 30px;
+        padding: 20px;
+        background: rgba(2, 15, 30, 0.7);
+        border-radius: 50px;
+        border: 1px solid cyan;
+        box-shadow:
+          inset 0 0 60px #00ffff0d,
+          0 0 40px #ff44cc;
+      }
+
+      .numero-boton {
+        aspect-ratio: 1/1;
+        background: linear-gradient(145deg, #131d33, #091020);
+        border: 2px solid #0cf7ff;
+        border-radius: 25px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #b5f0ff;
+        text-shadow: 0 0 8px cyan;
+        box-shadow:
+          0 0 15px #00ccff,
+          inset 0 0 5px black;
+        cursor: pointer;
+        transition: 0.15s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .numero-boton:hover:not(.vendido) {
+        background: #1f3470;
+        border-color: #ff66b2;
+        color: white;
+        box-shadow: 0 0 40px magenta;
+        transform: scale(1.02);
+      }
+
+      .numero-boton.vendido {
+        background: #1a1035;
+        border-color: #8b5cf6;
+        color: #b79aff;
+        text-decoration: line-through 3px #ff4d9e;
+        opacity: 0.7;
+        box-shadow: 0 0 12px #ff44cc;
+        cursor: not-allowed;
+        filter: grayscale(0.3);
+        font-style: italic;
+        position: relative;
+      }
+
+      .numero-boton.vendido::after {
+        content: "✔";
+        position: absolute;
+        top: 2px;
+        right: 6px;
+        font-size: 1.2rem;
+        color: #a0ff9e;
+        text-shadow: 0 0 10px lime;
+        text-decoration: none;
+      }
+
+      /* formulario registro comprador (emergente / inline) */
+      .registro-panel {
+        background: rgba(22, 10, 40, 0.9);
+        backdrop-filter: blur(25px);
+        border: 2px solid #00ffcc;
+        border-radius: 70px 70px 40px 40px;
+        padding: 30px 40px;
+        margin-top: 25px;
+        box-shadow:
+          0 0 70px #00eeff,
+          inset 0 0 20px #ff44cc;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .registro-titulo {
+        font-size: 2rem;
+        color: #fff0b5;
+        text-shadow:
+          0 0 10px magenta,
+          0 0 20px cyan;
+        margin-bottom: 15px;
+      }
+
+      .registro-numero-indicador {
+        background: #000c1f;
+        padding: 10px 30px;
+        border-radius: 40px;
+        display: inline-block;
+        align-self: flex-start;
+        margin-bottom: 25px;
+        border: 1px solid cyan;
+        font-size: 1.8rem;
+        color: #f6c6ff;
+      }
+
+      .campo-registro {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px 40px;
+        align-items: flex-end;
+      }
+
+      .grupo-input {
+        flex: 1 1 250px;
+      }
+
+      .grupo-input label {
+        display: block;
+        color: #b5f0ff;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .grupo-input input {
+        width: 100%;
+        background: #091b2e;
+        border: 2px solid magenta;
+        border-radius: 40px;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        color: white;
+        box-shadow: 0 0 20px magenta;
+        outline: none;
+      }
+
+      .grupo-input input:focus {
+        border-color: cyan;
+        box-shadow: 0 0 30px cyan;
+      }
+
+      .acciones-registro {
+        display: flex;
+        gap: 20px;
+        justify-content: flex-end;
+        margin-top: 35px;
+      }
+
+      .btn-registro {
+        background: transparent;
+        border: 2px solid #ff80bf;
+        border-radius: 50px;
+        padding: 15px 40px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #ff80bf;
+        box-shadow: 0 0 20px #ff44cc;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+
+      .btn-registro:hover {
+        background: #ff44cc30;
+        border-color: cyan;
+        color: cyan;
+        box-shadow: 0 0 40px cyan;
+      }
+
+      .btn-registro.cancelar {
+        border-color: #aaaaaa;
+        color: #ccc;
+        box-shadow: none;
+      }
+
+      .btn-registro.cancelar:hover {
+        background: #ffffff20;
+        border-color: white;
+        color: white;
+      }
+
+      /* mensajes cortos */
+      .mensaje-flotante {
+        background: #ffcc00ee;
+        border-radius: 60px;
+        padding: 12px 30px;
+        color: black;
+        font-weight: bold;
+        font-size: 1.2rem;
+        text-align: center;
+        border: 2px solid magenta;
+        box-shadow: 0 0 30px yellow;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-wrapper" id="appWrapper">
+      <div class="header-neon">
+        <h1>⚡ RIFA CÓSMICA ⚡</h1>
+        <div class="premios-especiales" id="premiosEspecialesPanel">
+          <!-- se llena con JS los 3 premios -->
+        </div>
+      </div>
+
+      <!-- formulario para definir los 3 premios y especiales -->
+      <div class="form-premios" id="formPremios">
+        <div class="input-premio">
+          <label>🏆 PREMIO 1</label>
+          <input
+            type="text"
+            id="premio1"
+            placeholder="ej: Auto 0km"
+            value="Auto 0km"
+          />
+        </div>
+        <div class="input-premio">
+          <label>💎 PREMIO 2</label>
+          <input
+            type="text"
+            id="premio2"
+            placeholder="ej: Viaje a marte"
+            value="Viaje a marte"
+          />
+        </div>
+        <div class="input-premio">
+          <label>🎁 PREMIO 3</label>
+          <input
+            type="text"
+            id="premio3"
+            placeholder="ej: TV 8K"
+            value="TV 8K"
+          />
+        </div>
+        <div class="input-premio">
+          <label>💰 COSTO BOLETO</label>
+          <input
+            type="number"
+            id="costoBoleto"
+            placeholder="ej: 10"
+            value="10"
+          />
+        </div>
+        <div class="input-premio">
+          <label>✨ ESPECIAL</label>
+          <input
+            type="text"
+            id="premioEspecial"
+            placeholder="ej: Mistery box"
+            value="Mistery box"
+          />
+        </div>
+        <button class="btn-neon" id="actualizarPremiosBtn">ACTUALIZAR</button>
+        <button class="btn-neon" id="verClientesBtn">VER CLIENTES</button>
+      </div>
+
+      <!-- panel dinámico de registro (se oculta/muestra) -->
+      <div id="registroContainer" style="display: none">
+        <div class="registro-panel" id="registroPanel">
+          <div class="registro-titulo">📝 REGISTRO COMPRADOR</div>
+          <div class="registro-numero-indicador" id="numeroSeleccionadoDisplay">
+            Número 0
+          </div>
+          <div class="campo-registro">
+            <div class="grupo-input">
+              <label>👤 NOMBRE COMPLETO</label>
+              <input
+                type="text"
+                id="inputNombre"
+                placeholder="e.g. Neo Anderson"
+                autocomplete="off"
+              />
+            </div>
+            <div class="grupo-input">
+              <label>💰 ABONOS ($)</label>
+              <input
+                type="number"
+                id="inputAbonos"
+                placeholder="0"
+                min="0"
+                step="any"
+              />
+            </div>
+          </div>
+          <div class="acciones-registro">
+            <button class="btn-registro cancelar" id="cancelarRegistroBtn">
+              ⬅ CANCELAR
+            </button>
+            <button class="btn-registro" id="confirmarRegistroBtn">
+              ✅ CONFIRMAR VENTA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- grilla de 100 números -->
+      <div class="numeros-grid" id="numerosGrid"></div>
+
+      <!-- panel de clientes (se oculta/muestra) -->
+      <div id="clientesContainer" style="display: none; margin-top: 25px">
+        <div class="registro-panel">
+          <!-- Reutilizamos estilos del panel de registro -->
+          <div class="registro-titulo">👥 LISTA DE CLIENTES</div>
+          <div
+            id="clientesLista"
+            style="
+              color: white;
+              max-height: 300px;
+              overflow-y: auto;
+              padding-right: 20px;
+              font-size: 1.1rem;
+            "
+          >
+            <!-- La lista de clientes se generará aquí -->
+          </div>
+          <div
+            class="acciones-registro"
+            style="justify-content: center; margin-top: 20px"
+          >
+            <button class="btn-registro" id="cerrarClientesBtn">CERRAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- pequeño pie de estado futurista -->
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          gap: 30px;
+          margin-top: 20px;
+          color: #9f9fff;
+          text-shadow: 0 0 5px cyan;
+        "
+      >
+        <span
+          >✨ NÚMEROS DISPONIBLES:
+          <span id="contadorDisponibles">100</span></span
+        >
+        <span>⚡ VENDIDOS: <span id="contadorVendidos">0</span></span>
+      </div>
+    </div>
+
+    <script>
+      (async function () {
+        // --- SUPABASE ---
+        // 1. Crea un proyecto en https://supabase.com/
+        // 2. Ve a "Project Settings" > "API".
+        // 3. Copia tu "Project URL" y tu "public anon key" aquí.
+        const SUPABASE_URL = "https://whvrnxicujqvgxodarox.supabase.co"; // ⚠️ CAMBIAR
+        const SUPABASE_KEY =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndodnJueGljdWpxdmd4b2Rhcm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDA5MTksImV4cCI6MjA4NzUxNjkxOX0.7UuXc-_RGuFbTwUN3wxhNvNCQoTmoH1AdtmvhYc41qE"; // ⚠️ CAMBIAR
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 4. En Supabase, ve a "SQL Editor" y ejecuta estas sentencias para crear las tablas necesarias:
+        /*
+            -- tabla principal de boletos (ya existente)
+            CREATE TABLE boletos (
+              numero INT PRIMARY KEY,
+              nombre TEXT NOT NULL,
+              abonos NUMERIC NOT NULL,
+              creado_en TIMESTAMPTZ DEFAULT now()
+            );
+
+            -- tabla para almacenar los premios y el costo del boleto
+            -- usaremos siempre la fila con id = 1 como configuración única
+            CREATE TABLE premios (
+              id SERIAL PRIMARY KEY,
+              premio1 TEXT NOT NULL,
+              premio2 TEXT NOT NULL,
+              premio3 TEXT NOT NULL,
+              especial TEXT NOT NULL,
+              costo_boleto NUMERIC NOT NULL
+            );
+
+            -- ⚠️ IMPORTANTE: Ejecuta esto para permitir guardar datos (desactiva seguridad RLS):
+            ALTER TABLE boletos DISABLE ROW LEVEL SECURITY;
+            ALTER TABLE premios DISABLE ROW LEVEL SECURITY;
+        */
+
+        // --- estado de la rifa ---
+        const totalNumbers = 100;
+        // array de boletos: null o { nombre, abonos }
+        const boletos = new Array(totalNumbers).fill(null);
+
+        // premios por defecto (se sincronizan con la nube)
+        let premios = {
+          premio1: "Auto 0km",
+          premio2: "Viaje a marte",
+          premio3: "TV 8K",
+          especial: "Mistery box",
+        };
+        let costoBoleto = 10; // Valor por defecto
+        const premiosRowId = 1; // siempre usamos esta fila en la tabla `premios`
+
+        // UI: número seleccionado actualmente (0-99) o null si ninguno
+        let numeroSeleccionado = null;
+
+        // elementos del DOM
+        const grid = document.getElementById("numerosGrid");
+        const premiosPanel = document.getElementById("premiosEspecialesPanel");
+        const inputPremio1 = document.getElementById("premio1");
+        const inputPremio2 = document.getElementById("premio2");
+        const inputPremio3 = document.getElementById("premio3");
+        const inputPremioEspecial = document.getElementById("premioEspecial");
+        const inputCostoBoleto = document.getElementById("costoBoleto");
+        const actualizarBtn = document.getElementById("actualizarPremiosBtn");
+        const registroContainer = document.getElementById("registroContainer");
+        const numeroSeleccionadoDisplay = document.getElementById(
+          "numeroSeleccionadoDisplay",
+        );
+        const inputNombre = document.getElementById("inputNombre");
+        const inputAbonos = document.getElementById("inputAbonos");
+        const cancelarRegistro = document.getElementById("cancelarRegistroBtn");
+        const confirmarRegistro = document.getElementById(
+          "confirmarRegistroBtn",
+        );
+        const contadorDisponiblesSpan = document.getElementById(
+          "contadorDisponibles",
+        );
+        const contadorVendidosSpan =
+          document.getElementById("contadorVendidos");
+        const verClientesBtn = document.getElementById("verClientesBtn");
+        const clientesContainer = document.getElementById("clientesContainer");
+        const clientesLista = document.getElementById("clientesLista");
+        const cerrarClientesBtn = document.getElementById("cerrarClientesBtn");
+
+        // --- funciones de actualización de contadores ---
+        function actualizarContadores() {
+          const vendidos = boletos.filter((b) => b !== null).length;
+          contadorVendidosSpan.textContent = vendidos;
+          contadorDisponiblesSpan.textContent = totalNumbers - vendidos;
+        }
+
+        // --- renderizar la grilla (10x10) ---
+        function renderizarGrid() {
+          grid.innerHTML = "";
+          for (let i = 0; i < totalNumbers; i++) {
+            const boton = document.createElement("div");
+            boton.className = "numero-boton";
+            if (boletos[i] !== null) {
+              boton.classList.add("vendido");
+            }
+            boton.textContent = i + 1; // números del 1 al 100
+            boton.dataset.index = i;
+            boton.addEventListener("click", (event) => {
+              const index = parseInt(event.currentTarget.dataset.index);
+              manejarClickNumero(index);
+            });
+            grid.appendChild(boton);
+          }
+        }
+
+        // --- click en número ---
+        function manejarClickNumero(index) {
+          if (boletos[index] !== null) {
+            // ya vendido, no se puede abrir registro
+            mostrarMensajeTemporal("❌ Número ya vendido (tachado)", "#ff4488");
+            return;
+          }
+          // abrir panel de registro con ese número
+          abrirRegistroParaNumero(index);
+        }
+
+        // --- abrir panel de registro ---
+        function abrirRegistroParaNumero(index) {
+          numeroSeleccionado = index;
+          numeroSeleccionadoDisplay.textContent = `Número ${index + 1}`;
+          inputNombre.value = "";
+          inputAbonos.value = "";
+          registroContainer.style.display = "block";
+          // desplazar suavemente hacia el panel
+          document
+            .getElementById("registroContainer")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // --- cerrar registro sin guardar ---
+        function cerrarRegistro() {
+          registroContainer.style.display = "none";
+          numeroSeleccionado = null;
+          inputNombre.value = "";
+          inputAbonos.value = "";
+        }
+
+        // --- confirmar venta (llenar datos) ---
+        async function confirmarVenta() {
+          if (numeroSeleccionado === null) {
+            cerrarRegistro();
+            return;
+          }
+          const nombre = inputNombre.value.trim();
+          const abonos = inputAbonos.value.trim();
+
+          if (nombre === "") {
+            mostrarMensajeTemporal(
+              "⚠️ Ingresa el nombre del comprador",
+              "orange",
+            );
+            return;
+          }
+          if (abonos === "" || isNaN(abonos) || Number(abonos) <= 0) {
+            mostrarMensajeTemporal(
+              "⚠️ Abonos debe ser un número positivo",
+              "orange",
+            );
+            return;
+          }
+
+          // --- Guardar en Supabase ---
+          const { data, error } = await _supabase.from("boletos").insert([
+            {
+              numero: numeroSeleccionado + 1,
+              nombre: nombre,
+              abonos: Number(abonos),
+            },
+          ]);
+
+          if (error) {
+            console.error("Error guardando en Supabase:", error);
+            // Código 42501 significa que RLS está bloqueando la escritura
+            if (error.code === "42501") {
+              mostrarMensajeTemporal(
+                "🔴 Error de permisos. Ejecuta: ALTER TABLE boletos DISABLE ROW LEVEL SECURITY;",
+                "red",
+              );
+            } else {
+              mostrarMensajeTemporal(
+                "🔴 Error al guardar en la base de datos.",
+                "red",
+              );
+            }
+            return; // Detener si el guardado en la BD falla
+          }
+
+          boletos[numeroSeleccionado] = {
+            nombre: nombre,
+            abonos: Number(abonos),
+          };
+
+          // actualizar UI: marcar como vendido en la grilla
+          const boton = document.querySelector(
+            `.numero-boton[data-index="${numeroSeleccionado}"]`,
+          );
+          if (boton) {
+            boton.classList.add("vendido");
+          }
+
+          actualizarContadores();
+          cerrarRegistro();
+          mostrarMensajeTemporal(
+            `✅ Nº ${numeroSeleccionado + 1} vendido a ${nombre} (abono $${abonos})`,
+            "#00ffaa",
+          );
+        }
+
+        // --- mensaje temporal (no implementamos toast, usamos alert personalizado suave) ---
+        function mostrarMensajeTemporal(texto, color) {
+          const msgDiv = document.createElement("div");
+          msgDiv.className = "mensaje-flotante";
+          msgDiv.style.position = "fixed";
+          msgDiv.style.bottom = "30px";
+          msgDiv.style.left = "50%";
+          msgDiv.style.transform = "translateX(-50%)";
+          msgDiv.style.zIndex = "9999";
+          msgDiv.style.backgroundColor = color || "#00ffffdd";
+          msgDiv.style.color = "#000";
+          msgDiv.style.fontWeight = "bold";
+          msgDiv.style.boxShadow = `0 0 40px ${color}`;
+          msgDiv.textContent = texto;
+          document.body.appendChild(msgDiv);
+          setTimeout(() => {
+            msgDiv.remove();
+          }, 2200);
+        }
+
+        // --- actualizar visualización de premios (panel superior) ---
+        function renderizarPremios() {
+          premiosPanel.innerHTML = `
+                <div class="premio-item"><span>🏅1</span> ${premios.premio1}</div>
+                <div class="premio-item"><span>🥈2</span> ${premios.premio2}</div>
+                <div class="premio-item"><span>🥉3</span> ${premios.premio3}</div>
+                <div class="premio-item"><span>✨E</span> ${premios.especial}</div>
+            `;
+        }
+
+        // --- tomar valores del formulario y actualizar objeto premios ---
+        function actualizarPremiosDesdeForm() {
+          premios.premio1 = inputPremio1.value.trim() || "Auto 0km";
+          premios.premio2 = inputPremio2.value.trim() || "Viaje a marte";
+          premios.premio3 = inputPremio3.value.trim() || "TV 8K";
+          premios.especial = inputPremioEspecial.value.trim() || "Mistery box";
+          costoBoleto = Number(inputCostoBoleto.value) || 0;
+          renderizarPremios();
+          // guardar también en la nube para que otros clientes vean el cambio
+          actualizarPremiosEnSupabase();
+          mostrarMensajeTemporal(
+            "✨ Premios y costo actualizados ✨",
+            "#f000f0",
+          );
+        }
+
+        // guarda la configuración de premios en la tabla `premios`
+        async function actualizarPremiosEnSupabase() {
+          const { error } = await _supabase
+            .from("premios")
+            .update({
+              premio1: premios.premio1,
+              premio2: premios.premio2,
+              premio3: premios.premio3,
+              especial: premios.especial,
+              costo_boleto: costoBoleto,
+            })
+            .eq("id", premiosRowId);
+          if (error) {
+            console.error("Error actualizando premios en Supabase:", error);
+            mostrarMensajeTemporal(
+              "🔴 Error al actualizar premios en la nube.",
+              "red",
+            );
+          }
+        }
+
+        // carga (o crea) la fila de premios desde Supabase
+        async function cargarPremiosDesdeSupabase() {
+          const { data, error } = await _supabase
+            .from("premios")
+            .select("*")
+            .eq("id", premiosRowId)
+            .maybeSingle();
+
+          if (error) {
+            console.error("Error cargando premios desde Supabase:", error);
+            return;
+          }
+
+          if (data) {
+            premios.premio1 = data.premio1 || premios.premio1;
+            premios.premio2 = data.premio2 || premios.premio2;
+            premios.premio3 = data.premio3 || premios.premio3;
+            premios.especial = data.especial || premios.especial;
+            costoBoleto = Number(data.costo_boleto) || costoBoleto;
+          } else {
+            // no existe, creamos la fila con valores por defecto
+            const { error: insertErr } = await _supabase
+              .from("premios")
+              .insert([
+                {
+                  id: premiosRowId,
+                  premio1: premios.premio1,
+                  premio2: premios.premio2,
+                  premio3: premios.premio3,
+                  especial: premios.especial,
+                  costo_boleto: costoBoleto,
+                },
+              ]);
+            if (insertErr) {
+              console.error("No se pudo crear fila de premios:", insertErr);
+            }
+          }
+        }
+
+        // --- Cargar datos iniciales desde Supabase ---
+        async function cargarBoletosDesdeSupabase() {
+          const { data, error } = await _supabase.from("boletos").select("*");
+
+          if (error) {
+            console.error("Error cargando boletos desde Supabase:", error);
+            if (error.message.includes("Failed to fetch")) {
+              mostrarMensajeTemporal(
+                "🔴 Error de red o URL de Supabase incorrecta.",
+                "red",
+              );
+            } else if (error.code === "42P01") {
+              mostrarMensajeTemporal(
+                '🔴 Tabla "boletos" no encontrada. ¿La creaste?',
+                "red",
+              );
+            } else {
+              mostrarMensajeTemporal(
+                "Error al cargar datos. Revisa la consola.",
+                "red",
+              );
+            }
+            return;
+          }
+
+          boletos.fill(null); // Limpiar el array local
+
+          data.forEach((boleto) => {
+            if (boleto.numero >= 1 && boleto.numero <= totalNumbers) {
+              boletos[boleto.numero - 1] = {
+                nombre: boleto.nombre,
+                abonos: boleto.abonos,
+              };
+            }
+          });
+
+          renderizarGrid();
+          actualizarContadores();
+          mostrarMensajeTemporal(
+            "✅ Datos sincronizados desde la nube.",
+            "#00ffaa",
+          );
+        }
+
+        // --- Realtime: Sincronización en vivo ---
+        function iniciarRealtime() {
+          // escucha de cambios en boletos (compras / borrados)
+          _supabase
+            .channel("tabla-boletos")
+            .on(
+              "postgres_changes",
+              { event: "*", schema: "public", table: "boletos" },
+              (payload) => {
+                // Si alguien compra (INSERT)
+                if (payload.eventType === "INSERT") {
+                  const nuevo = payload.new;
+                  if (nuevo.numero >= 1 && nuevo.numero <= totalNumbers) {
+                    boletos[nuevo.numero - 1] = {
+                      nombre: nuevo.nombre,
+                      abonos: nuevo.abonos,
+                    };
+                    const boton = document.querySelector(
+                      `.numero-boton[data-index="${nuevo.numero - 1}"]`,
+                    );
+                    if (boton) boton.classList.add("vendido");
+                  }
+                }
+                // Si alguien borra (DELETE) desde la base de datos
+                else if (payload.eventType === "DELETE") {
+                  const viejo = payload.old;
+                  if (viejo && viejo.numero) {
+                    boletos[viejo.numero - 1] = null;
+                    const boton = document.querySelector(
+                      `.numero-boton[data-index="${viejo.numero - 1}"]`,
+                    );
+                    if (boton) boton.classList.remove("vendido");
+                  }
+                }
+                actualizarContadores();
+              },
+            )
+            .subscribe();
+
+          // escucha de actualizaciones en la tabla de premios
+          _supabase
+            .channel("tabla-premios")
+            .on(
+              "postgres_changes",
+              { event: "UPDATE", schema: "public", table: "premios" },
+              (payload) => {
+                const nuevo = payload.new;
+                if (nuevo) {
+                  premios.premio1 = nuevo.premio1;
+                  premios.premio2 = nuevo.premio2;
+                  premios.premio3 = nuevo.premio3;
+                  premios.especial = nuevo.especial;
+                  costoBoleto = Number(nuevo.costo_boleto) || costoBoleto;
+                  inputPremio1.value = premios.premio1;
+                  inputPremio2.value = premios.premio2;
+                  inputPremio3.value = premios.premio3;
+                  inputPremioEspecial.value = premios.especial;
+                  inputCostoBoleto.value = costoBoleto;
+                  renderizarPremios();
+                  mostrarMensajeTemporal(
+                    "🎯 Premios sincronizados desde la nube.",
+                    "#00ffaa",
+                  );
+                }
+              },
+            )
+            .subscribe();
+        }
+
+        // --- inicializar todo ---
+        async function init() {
+          // cargar configuración de premios desde la base de datos
+          await cargarPremiosDesdeSupabase();
+
+          inputPremio1.value = premios.premio1;
+          inputPremio2.value = premios.premio2;
+          inputPremio3.value = premios.premio3;
+          inputPremioEspecial.value = premios.especial;
+          inputCostoBoleto.value = costoBoleto;
+          renderizarPremios();
+          renderizarGrid();
+          actualizarContadores();
+
+          // Event listeners
+          actualizarBtn.addEventListener("click", actualizarPremiosDesdeForm);
+
+          cancelarRegistro.addEventListener("click", (e) => {
+            e.preventDefault();
+            cerrarRegistro();
+          });
+
+          confirmarRegistro.addEventListener("click", (e) => {
+            e.preventDefault();
+            confirmarVenta();
+          });
+
+          // opcional: cerrar con tecla ESC
+          document.addEventListener("keydown", (e) => {
+            if (
+              e.key === "Escape" &&
+              registroContainer.style.display === "block"
+            ) {
+              cerrarRegistro();
+            }
+          });
+
+          // Event listeners para el panel de lista de clientes
+          verClientesBtn.addEventListener("click", async () => {
+            const { data, error } = await _supabase
+              .from("boletos")
+              .select("numero, nombre, abonos")
+              .order("numero", { ascending: true });
+
+            if (error) {
+              mostrarMensajeTemporal(
+                "🔴 Error al cargar la lista de clientes.",
+                "red",
+              );
+              console.error("Error fetching clients:", error);
+              return;
+            }
+
+            if (data.length === 0) {
+              clientesLista.innerHTML =
+                '<p style="text-align: center;">Aún no hay clientes registrados en la nube.</p>';
+            } else {
+              const listaHtml = data
+                .map(
+                  (cliente) =>
+                    `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-radius: 10px; background: #00ffff10; margin-bottom: 8px; border: 1px solid #00ffff30;">
+                            <span><strong>Nº ${cliente.numero}</strong> - ${cliente.nombre}</span>
+                            <span style="color: #a0f0ff; font-weight: bold;">Abono: $${cliente.abonos}</span>
+                        </div>`,
+                )
+                .join("");
+              clientesLista.innerHTML = listaHtml;
+            }
+
+            clientesContainer.style.display = "block";
+            clientesContainer.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          });
+
+          cerrarClientesBtn.addEventListener("click", () => {
+            clientesContainer.style.display = "none";
+          });
+
+          // Cargar datos desde Supabase al iniciar
+          await cargarBoletosDesdeSupabase();
+
+          // Iniciar escucha de cambios en tiempo real
+          iniciarRealtime();
+        }
+
+        // Iniciar la aplicación
+        await init();
+      })(); // fin de la función async autoejecutable
+    </script>
+  </body>
+</html>
