@@ -172,10 +172,55 @@
         transform: scale(1.03);
       }
 
+      /* reglas responsivas */
+      @media (max-width: 768px) {
+        .app-wrapper {
+          padding: 20px 15px 25px;
+        }
+        .header-neon h1 {
+          font-size: 2rem;
+        }
+        .form-premios,
+        .registro-panel {
+          flex-direction: column;
+          gap: 15px 20px;
+        }
+        .input-premio,
+        .grupo-input {
+          flex: 1 1 100%;
+        }
+        .btn-neon,
+        .btn-registro {
+          width: 100%;
+          text-align: center;
+        }
+        .numeros-grid {
+          gap: 8px;
+        }
+        .numero-boton {
+          font-size: 1.4rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header-neon h1 {
+          font-size: 1.6rem;
+        }
+        .premio-item {
+          font-size: 1rem;
+          padding: 8px 20px;
+        }
+        .numero-boton {
+          font-size: 1.2rem;
+          padding: 0;
+        }
+      }
+
       /* teclado/grilla de números 10x10 */
       .numeros-grid {
         display: grid;
-        grid-template-columns: repeat(10, 1fr);
+        /* se adapta automáticamente al ancho disponible */
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
         gap: 12px;
         margin: 30px 0 30px;
         padding: 20px;
@@ -185,6 +230,8 @@
         box-shadow:
           inset 0 0 60px #00ffff0d,
           0 0 40px #ff44cc;
+        /* permite scroll horizontal si muchas columnas en pantallas pequeñas */
+        overflow-x: auto;
       }
 
       .numero-boton {
